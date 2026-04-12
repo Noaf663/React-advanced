@@ -1,4 +1,4 @@
-import { Heading, Button, Input, Checkbox, Dialog, Portal, Box, Image, Text } from '@chakra-ui/react';
+import { Heading, Button, Input, Checkbox, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { EventsContext } from './EventsContext';
@@ -80,16 +80,35 @@ export const EventsPage = () => {
 
     }
 
+
     return selectedCategories.some((id) =>
     event.categoryIds.includes(id)
     );
    });
     
 
+    if (events.length === 0 || categories.length === 0) {
+  
    return (
      <>
-        <Heading>List of events</Heading>
+        <Heading mb="4">List of events</Heading>
+        <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
+          <Skeleton height="24px" mb="4" />
+          <Skeleton height="200px" mb="4" />
+          <SkeletonText noOfLines={3} gap="4" />
+        </Box>
 
+         <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
+          <Skeleton height="24px" mb="4" />
+          <Skeleton height="200px" mb="4" />
+          <SkeletonText noOfLines={3} gap="4" />
+        </Box>
+      </>
+   );
+    }
+    return (
+      <>
+      <Heading mb="4">List of events</Heading>
         <Button onClick={() => setOpen(true)}>
             Add Event
          </Button>
