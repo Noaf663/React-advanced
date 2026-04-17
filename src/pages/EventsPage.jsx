@@ -1,4 +1,4 @@
-import { Heading, Button, Input, Checkbox, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
+import { Heading, Button, Input, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { EventsContext } from './EventsContext';
@@ -69,6 +69,8 @@ export const EventsPage = () => {
             });
           });
     };
+    console.log(events);
+    console.log(categories);
 
       const searchedEvents = events.filter((event) => 
       event.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -90,24 +92,24 @@ export const EventsPage = () => {
     if (events.length === 0 || categories.length === 0) {
   
    return (
-     <>
+     <Box maxW="1100px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
         <Heading mb="4">List of events</Heading>
         <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
           <Skeleton height="24px" mb="4" />
-          <Skeleton height="200px" mb="4" />
+          <Skeleton height="220px" mb="4" borderRadius="md"/>
           <SkeletonText noOfLines={3} gap="4" />
         </Box>
 
          <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
           <Skeleton height="24px" mb="4" />
-          <Skeleton height="200px" mb="4" />
+          <Skeleton height="220px" mb="4" borderRadius="md" />
           <SkeletonText noOfLines={3} gap="4" />
         </Box>
-      </>
+      </Box>
    );
     }
     return (
-      <>
+      <Box maxW="1100px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
       <Heading mb="4">List of events</Heading>
         <Button onClick={() => setOpen(true)}>
             Add Event
@@ -152,7 +154,7 @@ export const EventsPage = () => {
           <form onSubmit={handleSubmit}>
     
        
-            
+                <Text mb="1">Title</Text>
                 <Input
                 type="text"
                 placeholder="Title"
@@ -161,7 +163,9 @@ export const EventsPage = () => {
                     setNewEvent({ ...newEvent, title: e.target.value })
                 }
                 required
+                mb="3"
                 />
+                <Text mb="3">Description</Text>
                 <Input 
                 type="text"
                 placeholder="Description"
@@ -170,7 +174,9 @@ export const EventsPage = () => {
                     setNewEvent({ ...newEvent, description: e.target.value})
                 }
                 required
+                mb="3"
                 />
+                <Text mb="1">Image</Text>
                 <Input 
                 type="text"
                 placeholder="Image URL"
@@ -179,7 +185,9 @@ export const EventsPage = () => {
                   setNewEvent({...newEvent, image: e.target.value})
                   }
                 required
+                mb="3"
                 />
+                <Text mb="1">Location</Text>
                 <Input
                 type="text"
                 placeholder="Location"
@@ -188,7 +196,9 @@ export const EventsPage = () => {
                   setNewEvent({...newEvent, location: e.target.value })
                 }
                 required
+                mb="3"
                 />
+                <Text mb="1">Start time</Text>
                 <Input
                 type="datetime-local"
                 value={newEvent.startTime}
@@ -196,7 +206,9 @@ export const EventsPage = () => {
                     setNewEvent({...newEvent, startTime: e.target.value})
                 }
                 required
+                mb="3"
                 />
+                <Text mb="1">End time</Text>
                 <Input
                 type="datetime-local"
                 value={newEvent.endTime}
@@ -204,32 +216,32 @@ export const EventsPage = () => {
                     setNewEvent({...newEvent, endTime: e.target.value})
                 }
                 required
-               
+               mb="3"
                />
              
                {categories.map((category) => (
-                <Checkbox
-                    key={category.id}
+                <label key={category.id}>
+                  <input 
+                    type="checkbox"
                     checked={newEvent.categoryIds.includes(category.id)}
-                    onCheckedChange={() => {
-                        if (newEvent.categoryIds.includes(category.id)) {
+                    onChange={(e) => {
+                      if (e.target.checked) {
                         setNewEvent({
                           ...newEvent,
-                          categoryIds: newEvent.categoryIds.filter(
-                            (id) => id !== category.id
-                          ),
-                        });
+                          categoryIds: [...newEvent.categoryIds, category.id],
+                          });
                      } else {
                           setNewEvent({
                             ...newEvent,
-                            categoryIds: [...newEvent.categoryIds, category.id],                    
+                            categoryIds: newEvent.categoryIds.filter((id) => id !== category.id)                    
                           });
                         }
                       }}
                   
-                    >
+                    />
                     {category.name}
-                    </Checkbox>
+                    </label>
+                    
                 ))}
                <Button type="submit">Save</Button>
 
@@ -242,8 +254,10 @@ export const EventsPage = () => {
             </Portal>
             </Dialog.Root>
             
-         
-        {visibleEvents.map((event) => {
+        {visibleEvents.length === 0 ? (
+          <Text mb="4">No events found.</Text>
+        ) : (
+        visibleEvents.map((event) => {
             const categoryNames = event.categoryIds
             .map((categoryId) => {
                 const foundCategory = categories.find(
@@ -254,21 +268,32 @@ export const EventsPage = () => {
             .join(", ");
           return (
             <Box key={event.id} borderWidth="1px" borderRadius="lg" p="4" mb="4">
-              <Heading size="md">{event.title}</Heading>
+              <Heading size="md">
+                <Link to={`/event/${event.id}`}>{event.title}</Link>
+              </Heading>
               <Text>{event.description}</Text>
-              <Image src={event.image} alt={event.title} mt="3" mb="3" borderRadius="md" />
-              <Text>Start: {event.startTime}</Text>
-              <Text>End: {event.endTime}</Text>
+              <Text>Location: {event.location}</Text>
+              <Image 
+              src={event.image} 
+              alt={event.title} 
+              mt="3" 
+              mb="3" 
+              borderRadius="md"
+              h="220px"
+              w="100%"
+              objectFit="cover" 
+              />
+              <Text>Start: {new Date(event.startTime).toLocaleString()}</Text>
+              <Text>End: {new Date(event.endTime).toLocaleString()}</Text>
               <Text>Categories: {categoryNames}</Text>
 
          <Button as={Link} to={`/event/${event.id}`} mt="3">
-            Event
+            View details
          </Button>
      </Box>
         );
-        })}
-        </>
-   );
-  }
-  
- 
+        })
+      )}
+    </Box>
+    );
+  };

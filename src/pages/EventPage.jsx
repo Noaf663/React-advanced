@@ -2,7 +2,10 @@ import { Heading,
     Button, 
     Input,
     Dialog, 
-    Portal
+    Portal, 
+    Box,
+    Text, 
+    Image
 } from '@chakra-ui/react';
 import { useState, useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -162,16 +165,26 @@ setOpen(false);
   });
 }
 };
-
 return (
-    <div>
-        <Heading>{event.title}</Heading>
-        <p>{event.description}</p>
-        <img src={event.image} alt={event.title} />
-        <p>Location: {event.location}</p>
-        <p>Start: {event.startTime}</p>
-        <p>End: {event.endTime}</p>
-        <p>Categories: {categoryNames.join(', ')}</p>
+    <Box maxW="900px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
+        <Button onClick={() => navigate("/")} mb="4">
+         Back to events
+        </Button>
+        <Heading mb="3">{event.title}</Heading>
+        <Text mb="2">{event.description}</Text>
+        <Image 
+        src={event.image} 
+        alt={event.title}
+        w="100%"
+        maxH="400px"
+        objectFit="cover"
+        borderRadius="md"
+        my="4"
+        />
+        <Text mb="2">Location: {event.location}</Text>
+        <Text mb="2">Start: {event.startTime}</Text>
+        <Text mb="2">End: {event.endTime}</Text>
+        <Text mb="4">Categories: {categoryNames.join(', ')}</Text>
 
         <Button onClick={() => setOpen(true)}>
             Edit event
@@ -186,51 +199,65 @@ return (
                     </Dialog.Header>
                     <Dialog.Body>
                 
-        
+             <Text mb="1">Title</Text>
              <Input 
               name="title"
               value={editedEvent.title}
               onChange={handleChange}
               placeholder="Title"
               required
+              mb="3"
               />
+              <Text mb="1">Description</Text>
               <Input
               name="description"
               value={editedEvent.description}
               onChange={handleChange}
               placeholder="Description"
               required
+              mb="3"
              />
+             <Text mb="1">Image</Text>
              <Input
              name="image"
              value={editedEvent.image}
              onChange={handleChange}
              placeholder="Image URL"
              required
+             mb="3"
              />
+             <Text mb="1">Location</Text>
              <Input
              name="location"
              value={editedEvent.location}
              onChange={handleChange}
              placeholder="Location"
              required
+             mb="3"
              />
+             <Text mb="1">Start Time</Text>
              <Input 
+             type="datetime-local"
              name="startTime"
              value={editedEvent.startTime}
              onChange={handleChange}
              placeholder="Start time"
              required
+            mb="3"
              />
+           
+             <Text mb="1">End Time</Text>
               <Input 
+             type="datetime-local"
              name="endTime"
              value={editedEvent.endTime}
              onChange={handleChange}
              placeholder="End time"
              required
+             mb="3"
              />
 
-             <p>Categories</p>
+             <Text mb="2">Categories</Text>
              {categories.map((category) => (
                 <label key={category.id}>
                     <input
@@ -244,7 +271,7 @@ return (
           </Dialog.Body>
 
 
-            <div>
+            <Box mt="4" display="flex" gap="3" flexWrap="wrap">
             <Button onClick={handleSave}>
                 Save
             </Button>
@@ -254,12 +281,13 @@ return (
             <Button onClick={handleDelete}>
                 Delete Event
             </Button>
-            </div>
+            </Box>
             </Dialog.Content>
             </Dialog.Positioner>
             </Portal>
             </Dialog.Root>
-    </div>
+    </Box>  
+    
 );
 
 };
