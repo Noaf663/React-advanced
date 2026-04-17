@@ -30,9 +30,7 @@ export const EventPage = () => {
     const navigate = useNavigate();
 
 
-console.log("eventId:", eventId);
-console.log("event:", event);
-console.log("categories:", categories);
+
    
         
 
@@ -53,7 +51,7 @@ console.log("categories:", categories);
  
    
 if (!event || categories.length === 0) {
-    return <p>Loading...</p>;
+    return <Text>Loading...</Text>;
 }
 const categoryNames = event.categoryIds
 ?.map((categoryId) => {
@@ -182,8 +180,8 @@ return (
         my="4"
         />
         <Text mb="2">Location: {event.location}</Text>
-        <Text mb="2">Start: {event.startTime}</Text>
-        <Text mb="2">End: {event.endTime}</Text>
+        <Text mb="2">Start: {new Date(event.startTime).toLocaleString()}</Text>
+        <Text mb="2">End: {new Date(event.endTime).toLocaleString()}</Text>
         <Text mb="4">Categories: {categoryNames.join(', ')}</Text>
 
         <Button onClick={() => setOpen(true)}>
