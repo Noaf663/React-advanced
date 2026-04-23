@@ -5,7 +5,9 @@ import { Heading,
     Portal, 
     Box,
     Text, 
-    Image
+    Image,
+    Skeleton,
+    SkeletonText
 } from '@chakra-ui/react';
 import { useState, useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -51,7 +53,15 @@ export const EventPage = () => {
  
    
 if (!event || categories.length === 0) {
-    return <Text>Loading...</Text>;
+    return(
+        <Box maxW="900px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
+            <Skeleton height="40px" mb="4" width="140px" />
+            <Skeleton height="36px" mb="4" />
+            <SkeletonText noOfLines={3} gap="4" mb="4" />
+            <Skeleton height="400px" borderRadius="md" mb="4" />
+            <SkeletonText noOfLines={4} gap="4" />
+        </Box>
+    );
 }
 const categoryNames = event.categoryIds
 ?.map((categoryId) => {
@@ -256,8 +266,12 @@ return (
              />
 
              <Text mb="2">Categories</Text>
+             <Box display="flex" flexDirection="column" gap="2">
              {categories.map((category) => (
-                <label key={category.id}>
+                <label 
+                key={category.id}
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
                     <input
                   type="checkbox"
                   checked={editedEvent.categoryIds.includes(category.id)}
@@ -266,6 +280,7 @@ return (
             {category.name}
         </label>
              ))}
+             </Box>
           </Dialog.Body>
 
 

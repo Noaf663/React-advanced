@@ -1,4 +1,4 @@
-import { Heading, Button, Input, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText } from '@chakra-ui/react';
+import { Heading, Button, Input, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText, SimpleGrid } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { EventsContext } from './EventsContext';
@@ -88,26 +88,8 @@ export const EventsPage = () => {
     );
    });
     
-
-    if (events.length === 0 || categories.length === 0) {
-  
-   return (
-     <Box maxW="1100px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
-        <Heading mb="4">List of events</Heading>
-        <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
-          <Skeleton height="24px" mb="4" />
-          <Skeleton height="220px" mb="4" borderRadius="md"/>
-          <SkeletonText noOfLines={3} gap="4" />
-        </Box>
-
-         <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
-          <Skeleton height="24px" mb="4" />
-          <Skeleton height="220px" mb="4" borderRadius="md" />
-          <SkeletonText noOfLines={3} gap="4" />
-        </Box>
-      </Box>
-   );
-    }
+const isLoading = events.length === 0 || categories.length === 0;
+    
     return (
       <Box maxW="1100px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
       <Heading mb="4">List of events</Heading>
@@ -121,9 +103,12 @@ export const EventsPage = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         
         />
-      
+      <Box md="4" display="flex" gap="4" flexWrap="wrap">
          {categories.map((category) => (
-          <label key={category.id}>
+          <label 
+          key={category.id}
+          style={{ display: "flex", alignItem:"center", gap:"8px" }}
+          >
             <input
             type="checkbox"
             checked={selectedCategories.includes(category.id)}
@@ -141,7 +126,8 @@ export const EventsPage = () => {
             {category.name}
           </label>
          ))}
-        
+        </Box>
+
         <Dialog.Root open={open} onOpenChange={(details) => setOpen(details.open)}>
         <Portal> 
         <Dialog.Backdrop />
@@ -218,9 +204,12 @@ export const EventsPage = () => {
                 required
                mb="3"
                />
-             
+             <Box mb="4" display="flex" gap="4" flexWrap="4">
                {categories.map((category) => (
-                <label key={category.id}>
+                <label 
+                key={category.id}
+                style= {{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
                   <input 
                     type="checkbox"
                     checked={newEvent.categoryIds.includes(category.id)}
@@ -241,23 +230,46 @@ export const EventsPage = () => {
                     />
                     {category.name}
                     </label>
-                    
+                 
                 ))}
-               <Button type="submit">Save</Button>
+                    </Box>
+               <Box mt="4" display="flex" gap="2">
+               <Button type="submit">
+                Save
+                </Button>
 
-            
-               <Button type="button" onClick={() => setOpen(false)}>Cancel</Button>
+               <Button type="button" onClick={() => setOpen(false)}>
+                Cancel
+                </Button>
+               </Box>
                </form>
             </Dialog.Body>
             </Dialog.Content>
             </Dialog.Positioner>
             </Portal>
             </Dialog.Root>
+
+            {isLoading ? (
+              <>
+              <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
+                <Skeleton height="24px" mb="4" />
+                <Skeleton height="220px" mb="4" borderRadius="md" />
+                <SkeletonText noOfLines={3} gap="4" />
+              </Box>
+
+              <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
+                <Skeleton height="24px" mb="4" />
+                <Skeleton height="220px" mb="4" borderRadius="md" />
+                <SkeletonText noOfLines={3} gap="4" />
+              </Box>
+              </>
+           
             
-        {visibleEvents.length === 0 ? (
+            ) : visibleEvents.length === 0 ? (
           <Text mb="4">No events found.</Text>
         ) : (
-        visibleEvents.map((event) => {
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap="6">
+        {visibleEvents.map((event) => {
             const categoryNames = event.categoryIds
             .map((categoryId) => {
                 const foundCategory = categories.find(
@@ -265,6 +277,7 @@ export const EventsPage = () => {
                 );
                 return foundCategory?.name;
             })
+             
             .join(", ");
           return (
             <Box key={event.id} borderWidth="1px" borderRadius="lg" p="4" mb="4">
@@ -292,7 +305,9 @@ export const EventsPage = () => {
          </Button>
      </Box>
         );
-        })
+        })}
+              </SimpleGrid>
+
       )}
     </Box>
     );
