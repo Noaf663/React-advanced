@@ -93,7 +93,7 @@ const isLoading = events.length === 0 || categories.length === 0;
     return (
       <Box maxW="1100px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
       <Heading mb="4">List of events</Heading>
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} mb="3">
             Add Event
          </Button>
         <Input 
