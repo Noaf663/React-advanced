@@ -1,4 +1,4 @@
-import { Heading, Button, Input, Dialog, Portal, Box, Image, Text, Skeleton, SkeletonText, SimpleGrid } from '@chakra-ui/react';
+import { Heading, Button, Input, Dialog, Portal, Box, Image, Text, Skeleton, SimpleGrid } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { EventsContext } from './EventsContext';
@@ -103,11 +103,18 @@ const isLoading = events.length === 0 || categories.length === 0;
         onChange={(e) => setSearchTerm(e.target.value)}
         
         />
-      <Box md="4" display="flex" gap="4" flexWrap="wrap">
-         {categories.map((category) => (
+      <Box mb="4" mt="4" display="flex" gap="4" flexWrap="wrap">
+        {isLoading ? (
+          <>
+          <Skeleton height="28px" width="90px" borderRadius="md" />
+          <Skeleton height="28px" width="110px" borderRadius="md" />
+          <Skeleton height="28px" width="100px" borderRadius="md" />
+          </>
+        ) : (
+         categories.map((category) => (
           <label 
           key={category.id}
-          style={{ display: "flex", alignItem:"center", gap:"8px" }}
+          style={{ display: "flex", alignItems:"center", gap:"8px" }}
           >
             <input
             type="checkbox"
@@ -125,7 +132,8 @@ const isLoading = events.length === 0 || categories.length === 0;
             />
             {category.name}
           </label>
-         ))}
+         ))
+        )}
         </Box>
 
         <Dialog.Root open={open} onOpenChange={(details) => setOpen(details.open)}>
@@ -204,7 +212,7 @@ const isLoading = events.length === 0 || categories.length === 0;
                 required
                mb="3"
                />
-             <Box mb="4" display="flex" gap="4" flexWrap="4">
+             <Box mb="4" display="flex" gap="4" flexWrap="wrap">
                {categories.map((category) => (
                 <label 
                 key={category.id}
@@ -250,19 +258,23 @@ const isLoading = events.length === 0 || categories.length === 0;
             </Dialog.Root>
 
             {isLoading ? (
-              <>
-              <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
-                <Skeleton height="24px" mb="4" />
-                <Skeleton height="220px" mb="4" borderRadius="md" />
-                <SkeletonText noOfLines={3} gap="4" />
-              </Box>
+              <SimpleGrid columns={{ base: 1, md: 2, xl: 3}} gap="6">
+                {Array.from({ length: 6 }).map((_, index) => (
+              <Box key={index} borderWidth="1px" borderRadius="lg" p="4" mb="4">
+                <Skeleton height="24px" width="70%" mb="4" />
+                <Skeleton height="18px" width="90%" mb="2" />
+                <Skeleton height="18px" width="80%" mb="4" />
 
-              <Box borderWidth="1px" borderRadius="lg" p="4" mb="4">
-                <Skeleton height="24px" mb="4" />
                 <Skeleton height="220px" mb="4" borderRadius="md" />
-                <SkeletonText noOfLines={3} gap="4" />
+              
+                <Skeleton height="18px" width="75%" mb="2" />
+                <Skeleton height="18px" width="75%" mb="2" />
+                <Skeleton height="18px" width="60%" mb="4" />
+
+                <Skeleton height="40px" width="120px" borderRadius="md" />
               </Box>
-              </>
+              ))}
+              </SimpleGrid>
            
             
             ) : visibleEvents.length === 0 ? (

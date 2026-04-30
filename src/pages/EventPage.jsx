@@ -7,7 +7,6 @@ import { Heading,
     Text, 
     Image,
     Skeleton,
-    SkeletonText
 } from '@chakra-ui/react';
 import { useState, useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -55,11 +54,19 @@ export const EventPage = () => {
 if (!event || categories.length === 0) {
     return(
         <Box maxW="900px" mx="auto" px={{ base: "4", md: "6", lg: "8" }} py="6">
-            <Skeleton height="40px" mb="4" width="140px" />
-            <Skeleton height="36px" mb="4" />
-            <SkeletonText noOfLines={3} gap="4" mb="4" />
+            <Skeleton height="40px" width="140px" mb="4" borderRadius="md" />
+
+            <Skeleton height="36px" width="60%" mb="3" />
+            <Skeleton height="20px" width="90%" mb="4" />
+            
             <Skeleton height="400px" borderRadius="md" mb="4" />
-            <SkeletonText noOfLines={4} gap="4" />
+
+            <Skeleton height="20px" width="50%" mb="2" />
+            <Skeleton height="20px" width="55%" mb="2" />
+            <Skeleton height="20px" width="55%" mb="2" />
+            <Skeleton height="20px" width="45%" mb="4" />
+
+            <Skeleton height="40px" width="110px" borderRadius="md" />
         </Box>
     );
 }
